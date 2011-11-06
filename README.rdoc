@@ -2,6 +2,8 @@
 
 Contacts is a universal interface to grab contact list information from various providers including Hotmail, AOL, Gmail, Plaxo and Yahoo.
 
+This fork is based on cardmagic/contacts and tries to collect all patches which are useful and don't conflict with each other. I try to sync with contacts now and then, if they update.
+
 == Download
 
 * gem install contacts

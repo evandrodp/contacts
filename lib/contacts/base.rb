@@ -138,6 +138,7 @@ class Contacts
     end
     
     def post(url, postdata, cookies="", referer="")
+      debug "posting url='#{url}' postdata='#{postdata}'"
       url = URI.parse(url)
       http = open_http(url)
       http_header = { "User-Agent" => self.user_agent,
@@ -159,6 +160,7 @@ class Contacts
     end
     
     def get(url, cookies="", referer="")
+      debug "getting url='#{url}'"
       url = URI.parse(url)
       http = open_http(url)
       resp, data = http.get("#{url.path}?#{url.query}",
@@ -192,8 +194,13 @@ class Contacts
 
       data
     end
-  end
+
+    def debug(str)
+      puts "#{caller.first.gsub(/.*\//, '')}: #{str}" if ENV['DEBUG']
+    end
   
+  end
+
   class ContactsError < StandardError
   end
   

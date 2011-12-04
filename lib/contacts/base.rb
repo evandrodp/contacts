@@ -69,7 +69,11 @@ class Contacts
     def skip_gzip?
       false
     end
-    
+
+    def user_agent
+      "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0"
+    end
+
   private
   
     def domain
@@ -136,7 +140,7 @@ class Contacts
     def post(url, postdata, cookies="", referer="")
       url = URI.parse(url)
       http = open_http(url)
-      http_header = { "User-Agent" => "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0",
+      http_header = { "User-Agent" => self.user_agent,
         "Accept-Encoding" => "gzip",
         "Cookie" => cookies,
         "Referer" => referer,
@@ -158,7 +162,7 @@ class Contacts
       url = URI.parse(url)
       http = open_http(url)
       resp, data = http.get("#{url.path}?#{url.query}",
-        "User-Agent" => "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0",
+        "User-Agent" => self.user_agent,
         "Accept-Encoding" => "gzip",
         "Cookie" => cookies,
         "Referer" => referer

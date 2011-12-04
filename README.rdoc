@@ -6,9 +6,9 @@ Contacts is a universal interface to grab contact list information from various 
 
 == Download
 
-* gem install contacts
-* http://github.com/cardmagic/contacts
-* git clone git://github.com/cardmagic/contacts.git
+* gem install git://github.com/jensb/contacts.git
+* http://github.com/jensb/contacts
+* git clone git://github.com/jensb/contacts.git
 
 == Background
 

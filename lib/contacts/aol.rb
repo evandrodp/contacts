@@ -104,12 +104,13 @@ class Contacts
       return @contacts if @contacts
       if connected?
         data, resp, cookies, forward, old_url = get(CONTACT_LIST_URL, @cookies, CONTACT_LIST_URL) + [CONTACT_LIST_URL]
- 
+
         until forward.nil?
+          debug ".. forward=#{forward}"
           data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
         end
         
-        if resp.code_type != Net::HTTPOK
+        if resp.code_type != Net::HTTPOK or data.include?("error.gif")
           raise ConnectionError, self.class.const_get(:PROTOCOL_ERROR)
         end
  
@@ -118,7 +119,10 @@ class Contacts
         (doc/:input).each do |input|
           postdata["user"] = input.attributes["value"] if input.attributes["name"] == "user"
         end
-        
+
+        raise ConnectionError, "User ID invalid" if postdata["user"].nil?
+
+        debug "Got user=#{postdata["user"]}, cookies=#{cookies}"
         data, resp, cookies, forward, old_url = get(CONTACT_LIST_CSV_URL, @cookies, CONTACT_LIST_URL) + [CONTACT_LIST_URL]
  
         until forward.nil?

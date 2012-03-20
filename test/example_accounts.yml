@@ -48,3 +48,35 @@ mailru:
     -
       name: "FirstName2 LastName2"
       email_address: "firstname2@example.com"
+gmx:
+  username: <changeme>
+  password: <changeme>
+  contacts:
+    -
+      name: "FirstName1 LastName1"
+      email_address: "firstname1@example.com"
+    -
+      name: "FirstName2 LastName2"
+      email_address: "firstname2@example.com"
+
+webde:
+  username: <changeme>
+  password: <changeme>
+  contacts:
+    -
+      name: "FirstName1 LastName1"
+      email_address: "firstname1@example.com"
+    -
+      name: "FirstName2 LastName2"
+      email_address: "firstname2@example.com"
+
+tmobile_de:
+  username: <changeme>
+  password: <changeme>
+  contacts:
+    -
+      name: "FirstName1 LastName1"
+      email_address: "firstname1@example.com"
+    -
+      name: "FirstName2 LastName2"
+      email_address: "firstname2@example.com"

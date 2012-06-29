@@ -21,17 +21,20 @@ class Contacts
       end
 
       while !@si or @si.empty?
-        @si = forward.scan(/si=([-*0-9A-Za-z.]+)/).flatten.uniq
-        @start_page = forward
+        @si = forward.scan(/si=([-_*0-9A-Za-z.]+)/).flatten.uniq
+        @start_page ||= forward
         data, resp, cookies, forward = get(forward, cookies)
+        @sid = data.scan(/sid=([0-9A-Fa-f]+)/).flatten.uniq
+	#debug "page content: #{data}" 
+      	debug "Login loop: session=#{@session}, si=#{@si}, sid=#{@sid}, cookies='#{@cookies}', forward=#{@sart_page}"
       end
-
       @cookies = cookies
-      debug "Login process. session=#{@session}, si=#{@si}, cookies='#{@cookies}', forward=#{@sart_page}"
 
+      data, resp, cookies, forward = get("https://navigator.web.de/navigator/show?sid=#{@sid}", @cookies)
       if resp.code_type != Net::HTTPOK
         raise ConnectionError, PROTOCOL_ERROR
       end
+      debug "Login ready: session=#{@session}, si=#{@si}, sid=#{@sid}, cookies='#{@cookies}', forward=#{@sart_page}"
     end
 
 
@@ -40,28 +43,29 @@ class Contacts
       #if connected?   # WEB.DE does not send mandatory cookies
 
         debug "Starting contact export ..."
-        uas2server = URI.parse(@start_page).host
-        uas2params =  "serviceID=comsaddressbook-live.webde&session=#{@si}&"
-        uas2params += "server=https://#{uas2server}&partnerdata=#{CGI.escape("register_url=https://#{uas2server}/intern/navigator/register/?si=#{@si}")}"
-        uas2url = "https://uas2.uilogin.de/intern/jump/?#{uas2params}"
+        uas2server = "navigator.web.de"
+        uas2params =  "serviceID=comsaddressbook-live.webde-3c&session=#{@sid}&"
+        uas2params += "server=https://#{uas2server}&partnerdata="
+	uas2params += CGI.escape("register_url=https://#{uas2server}/intern/logout/register/?sid=#{@sid}&iac_token=&iac_appname=addressbook&navigator_theme=blue&navigator_bg&light")
+        uas2url = "https://uas.web.de/intern/jump/?#{uas2params}"
         data, resp, cookies, forward = get(uas2url, "", @start_page)
         debug "Redirect response: #{forward}"
-        raise ConnectionError, PROTOCOL_ERROR unless forward.scan(/adressbuch.web.de/)
-        raise ConnectionError, PROTOCOL_ERROR if forward.index(/adressbuch.web.de\/error/)
+        raise ConnectionError, PROTOCOL_ERROR unless forward.scan(/cab.web.de/)
+        raise ConnectionError, PROTOCOL_ERROR if forward.index(/cab.web.de\/error/)
 
         # Step 2: Get new session ID for addressbook URL
         @session = forward.scan(/.*session=([_\w-]+)/).flatten.first
         debug "URL=#{forward}, Got addressbook session: #{@session}"
 
         # Step 3: POST addressbook export command with session ID
-        posturl = "https://adressbuch.web.de/exportcontacts"
+        posturl = "https://cab.web.de/exportcontacts"
         postdata = "what=PERSON&session=#{@session}&language=de&raw_format=csv_Outlook2003&export=Exportieren"
         data, resp, cookies, forward = post(posturl, postdata, @cookies, forward)
-        debug "Adressbook data: #{data}"
 
         if resp.code_type != Net::HTTPOK
           raise ConnectionError, self.class.const_get(:PROTOCOL_ERROR)
         end
+        debug "Adressbook data: #{data}"
         parse(data, options)
 
       #end

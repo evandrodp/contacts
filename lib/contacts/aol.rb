@@ -6,17 +6,17 @@ class Contacts
     LOGIN_URL           = "https://my.screenname.aol.com/_cqr/login/login.psp"
     LOGIN_REFERER_URL   = "http://webmail.aol.com/"
     LOGIN_REFERER_PATH = "sitedomain=sns.webmail.aol.com&lang=en&locale=us&authLev=0&uitype=mini&loginId=&redirType=js&xchk=false"
-    AOL_NUM = "34290-411" # this seems to change each time they change the protocol
+    AOL_NUM = "36478-111" # this seems to change each time they change the protocol
     
     CONTACT_LIST_URL    = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ContactList.aspx?folder=Inbox&showUserFolders=False"
     CONTACT_LIST_CSV_URL = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ABExport.aspx?command=all"
     PROTOCOL_ERROR      = "AOL has changed its protocols, please upgrade this library first. If that does not work, dive into the code and submit a patch at http://github.com/cardmagic/contacts"
-    
-    def real_connect
-      if login.strip =~ /^(.+)@aol\.com$/ # strip off the @aol.com for AOL logins
-        login = $1
-      end
 
+    def real_connect
+      login.sub!(/\@aol\.[a-z.]+$/, "")
+
+      raise ConnectionError, "Login is missing" if login.nil?
+      raise ConnectionError, "Password is missing" if password.nil?
       postdata = {
         "loginId" => login,
         "password" => password,
@@ -26,17 +26,17 @@ class Contacts
         "_sns_link_color_" => "",
         "_sns_width_" => "",
         "_sns_height_" => "",
-        "offerId" => "mail-second-en-us",
+        "offerId" => "webmail-de-de",
         "_sns_bg_color_" => "",
         "sitedomain" => "sns.webmail.aol.com",
         "regPromoCode" => "",
         "mcState" => "initialized",
         "uitype" => "std",
         "siteId" => "",
-        "lang" => "en",
+        "lang" => "de",
         "locale" => "us",
         "authLev" => "0",
-        "siteState" => "",
+        "siteState" => "ver:4|rt:STANDARD|at:SNS|ld:mail.aol.de|uv:AOL|lc:de-de|mt:ANGELIA|snt:ScreenName|sid:4010b5a3-d070-4964-ae02-9c55131c8e5d",
         "isSiteStateEncoded" => "false",
         "use_aam" => "0",
         "seamless" => "novl",

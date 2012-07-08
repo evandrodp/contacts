@@ -162,7 +162,7 @@ class Contacts
     
     def get(url, cookies="", referer="")
       debug "getting url='#{url}'"
-      url = URI.parse(url)
+      url = URI.parse(URI.escape(url))
       http = open_http(url)
       resp, data = http.get("#{url.path}?#{url.query}",
         "User-Agent" => self.user_agent,
@@ -173,7 +173,7 @@ class Contacts
       data = uncompress(resp, data)
       cookies = parse_cookies(resp.response['set-cookie'], cookies)
       forward = resp.response['Location']
-      if forward and URI.parse(forward).host.nil?
+      if forward and URI.parse(URI.escape(forward)).host.nil?
         forward = url.scheme.to_s + "://" + url.host.to_s + forward
       end
       #debug "... received #{resp.inspect}, Location=#{forward}"

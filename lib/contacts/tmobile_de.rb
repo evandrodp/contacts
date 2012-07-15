@@ -8,19 +8,19 @@ class Contacts
 
     def real_connect
       data, resp, self.cookies, forward = get(URL, "")
-
-      doc = Nokogiri(data)
+      debug data
+      doc = Hpricot(data)
       meta = doc.at('meta[http-equiv=refresh]')
 
       if meta.nil?
-        raise ConnectionError, PROTOCOL_ERROR
+        raise AuthenticationError, PROTOCOL_ERROR
       end
 
       forward = meta['content'].split('URL=').last
       
       data, resp, self.cookies, forward = get(forward, self.cookies)
 
-      doc = Nokogiri(data)
+      doc = Hpricot(data)
 
       self.tid = doc.at('input[name=tid]')['value']
       url = doc.at('form[name=login]')['action']

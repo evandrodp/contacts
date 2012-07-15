@@ -24,7 +24,7 @@ class HotmailContactImporterTest < ContactImporterTestCase
       assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
     end
   end
-  
+
   def test_importer_fails_with_invalid_msn_password
     assert_raise(Contacts::AuthenticationError) do
       Contacts.new(:hotmail, "test@msn.com","wrong_password")

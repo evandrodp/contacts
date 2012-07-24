@@ -71,7 +71,7 @@ class Contacts
 
     TYPES[:hotmail] = Hotmail
     NAMES[:hotmail] = "Hotmail"
-    DOMAIN_RES[:hotmail] = [/[.@]live\./i]
+    DOMAIN_RES[:hotmail] = [/[.@]live\./i, /[.@]hotmail\./i]
 
     # the contacts url is dynamic
     # luckily it tells us where to find it

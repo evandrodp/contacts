@@ -31,15 +31,15 @@ For a long time, the only way to get a list of contacts from your free online em
 
 == Usage
 
-	Contacts::Hotmail.new(login, password).contacts # => [["name", "foo@bar.com"], ["another name", "bow@wow.com"]]
-	Contacts::Yahoo.new(login, password).contacts
-	Contacts::Gmail.new(login, password).contacts
+	 Contacts::Hotmail.new(login, password).contacts # => [["name", "foo@bar.com"], ["another name", "bow@wow.com"]]
+	 Contacts::Yahoo.new(login, password).contacts
+	 Contacts::Gmail.new(login, password).contacts
 	
-	Contacts.new(:gmail, login, password).contacts
-	Contacts.new(:hotmail, login, password).contacts
-	Contacts.new(:yahoo, login, password).contacts
+	 Contacts.new(:gmail, login, password).contacts
+	 Contacts.new(:hotmail, login, password).contacts
+	 Contacts.new(:yahoo, login, password).contacts
 	
-	Contacts.guess(login, password).contacts
+	 Contacts.guess(login, password).contacts
 
 Notice there are three ways to use this library so that you can limit the use as much as you would like in your particular application. The Contacts.guess method will automatically concatenate all the address book contacts from each of the successful logins in the case that a username password works across multiple services.
 

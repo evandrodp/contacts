@@ -223,31 +223,27 @@ class Contacts
   
   def self.new(type, login, password, options={})
     if type.to_s == 'auto' and !DOMAIN_RES.empty?
-      DOMAIN_RES.each do | t, res |
-        res.each do |re|
-          #debug "autodetection: trying = #{re} against #{login}"
-          type = t if login.match(re)
-        end
-      end
+      DOMAIN_RES.each { | t, res | res.each { |re| type = t if login.match(re) } }
       debug "autodetection: found type = #{type}"
-      ## guessing makes Authentication failure tests fail -> no exception thrown
       if type.to_s == 'auto'    # no autodetection possible => resort to guessing
         othertypes = {}
         DOMAIN_RES.each {|k,v| othertypes[k] = TYPES[k] if v.empty? }  # collect providers with no regexp
         debug "guessing: trying #{othertypes.inspect}"
-        if c = self.guess(login, password, {}, othertypes)
+        if c = self.guess_new(login, password, {}, othertypes)
           return c
         else
           raise AuthenticationError
         end
       end
-    elsif TYPES.include?(type.to_s.intern)
+    end
+    if TYPES.include?(type.to_s.intern)
       TYPES[type.to_s.intern].new(login, password, options)
     else
       raise TypeNotFound, "#{type.inspect} is not a valid type, please choose one of the following: #{TYPES.keys.inspect}"
     end
   end
-  
+
+  # .guess above needs to return a Contacts Provider constant, to be compatible with .new
   def self.guess(login, password, options={}, types=TYPES)
     types.inject([]) do |a, t|
       begin
@@ -256,5 +252,15 @@ class Contacts
         a
       end
     end.uniq
+  end
+
+  def self.guess_new(login, password, options={}, types=TYPES)
+    types.collect do |type, tclass|
+      begin
+        tclass.new(login, password, options)
+      rescue AuthenticationError
+        nil
+      end
+    end.compact.uniq.first
   end
 end

@@ -65,5 +65,6 @@ class Contacts
   end
 
   TYPES[:mailru] = Mailru
+  NAMES[:mailru] = "Mail.ru"
   DOMAIN_RES[:mailru] = [/[.@]mail\.ru$/i]
 end

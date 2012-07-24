@@ -9,6 +9,7 @@ require "erb"
 
 class Contacts
   TYPES = {}
+  NAMES = {}
   DOMAIN_RES = {}      # Domains for type autodetection
   VERSION = "1.2.4"
   

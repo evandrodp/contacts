@@ -31,6 +31,7 @@ class Contacts
     private
     
     TYPES[:gmail] = Gmail
+    NAMES[:gmail] = "Google Mail"
     DOMAIN_RES[:gmail] = [/[.@]google\./i, /[.@]googlemail\./i, /[.@]gmail\./i]
   end
 end

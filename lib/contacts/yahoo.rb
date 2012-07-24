@@ -102,5 +102,6 @@ class Contacts
   end
 
   TYPES[:yahoo] = Yahoo
+  NAMES[:yahoo] = "Yahoo"
   DOMAIN_RES[:yahoo] = [/[.@]yahoo\./i]
 end

@@ -157,5 +157,6 @@ class Contacts
   end
  
   TYPES[:aol] = Aol
+  NAMES[:aol] = "AOL"
   DOMAIN_RES[:aol] = []  # empty: Domain not included in email, resort to guessing for this provider
 end

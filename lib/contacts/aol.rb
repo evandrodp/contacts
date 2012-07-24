@@ -75,12 +75,14 @@ class Contacts
       # raise data.inspect
       
       data, resp, cookies, forward, old_url = post(LOGIN_URL, h_to_query_string(postdata), cookies, LOGIN_REFERER_URL) + [LOGIN_REFERER_URL]
-      
+
       until forward.nil?
         data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
       end
       
-      if data.index("Invalid Username or Password. Please try again.") or data.index("Incorrect Username or Password.")
+      if data.index("Invalid Username or Password. Please try again.") or
+          data.index("Incorrect Username or Password.") or
+          data.index("div id=\"snPwdErr\"")
         raise AuthenticationError, "Username and password do not match"
       elsif data.index("Required field must not be blank")
         raise AuthenticationError, "Login and password must not be blank"

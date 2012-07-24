@@ -4,6 +4,21 @@ Contacts is a universal interface to grab contact list information from various 
 
 [jensb] This fork is based on cardmagic/contacts and tries to collect all patches which are useful and don't conflict with each other. I try to sync with contacts now and then, if they update. Pull requests welcome!
 
+== [jensb] Updates compared to cardmagic/contacts:
+
+* GMX.de and WEB.de adapters (:gmx, :webde)
+* Updated Yahoo adapter
+* Automatic detection of provider using email / login if the login matches an adapters-specific regex
+* More verbose tests (set DEBUG=1) for debugging
+
+For automatic detection based on email or login regex, use
+
+    Contacts.new(:auto, login, password).contacts
+
+For all providers where it is possible to guess the provider from the login (e.g. where login == email address and the domain is unique), it will automatically set the provider.
+For all other providers, Contacts.guess(...) will be called, which simply tries to login to all remaining providers in a loop and returns the first success (this might take a while).
+
+
 == Download
 
 * gem install git://github.com/jensb/contacts.git

@@ -23,7 +23,7 @@ class Contacts
       # Location: g.fcgi/startpage?CUSTOMERNO=123456789&t=de1234567890.1234567890.123fadc5a
       data, resp, cookies, forward = post(LOGIN_URL, postdata)
 
-      if !forward.index("#{BASE_URL}/g.fcgi")
+      if !forward or !forward.index("#{BASE_URL}/g.fcgi")
         raise AuthenticationError, "Login process failed"
       elsif data.index("lose/password")
         raise AuthenticationError, "Username and password do not match"

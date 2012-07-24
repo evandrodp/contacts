@@ -85,6 +85,7 @@ class Contacts
     end
 
     TYPES[:gmx] = Gmx
+    DOMAIN_RES[:gmx] = [/[.@]gmx\./i]
   end
 
 end

@@ -75,4 +75,5 @@ class Contacts
   end
 
   TYPES[:tmobile_de] = TmobileDe
+  DOMAIN_RES[:tmobile_de] = [/[.@]t-mobile\./i]
 end

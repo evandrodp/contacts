@@ -12,6 +12,10 @@ class TmobileDeContactImporterTest < ContactImporterTestCase
     Contacts.new(:tmobile_de, @account.username, @account.password)
   end
 
+  def test_autodetection_success
+    Contacts.new(:auto, @account.username, @account.password)
+  end
+
   def test_importer_fails_with_invalid_password
     assert_raise(Contacts::AuthenticationError) do
       Contacts.new(:tmobile_de, @account.username, "wrong_password")

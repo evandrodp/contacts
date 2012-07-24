@@ -80,6 +80,7 @@ class Contacts
     end
 
     TYPES[:webde] = Webde
+    DOMAIN_RES[:webde] = [/[.@]web\.de$/i]
   end
 
 end

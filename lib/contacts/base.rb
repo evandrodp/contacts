@@ -9,6 +9,7 @@ require "erb"
 
 class Contacts
   TYPES = {}
+  DOMAIN_RES = {}      # Domains for type autodetection
   VERSION = "1.2.4"
   
   class Base
@@ -200,7 +201,11 @@ class Contacts
     def debug(str)
       puts "#{caller.first.gsub(/.*\//, '')}: #{str}" if ENV['DEBUG']
     end
-  
+
+  end
+
+  def self.debug(str)
+    puts "#{caller.first.gsub(/.*\//, '')}: #{str}" if ENV['DEBUG']
   end
 
   class ContactsError < StandardError
@@ -216,15 +221,34 @@ class Contacts
   end
   
   def self.new(type, login, password, options={})
-    if TYPES.include?(type.to_s.intern)
+    if type.to_s == 'auto' and !DOMAIN_RES.empty?
+      DOMAIN_RES.each do | t, res |
+        res.each do |re|
+          #debug "autodetection: trying = #{re} against #{login}"
+          type = t if login.match(re)
+        end
+      end
+      debug "autodetection: found type = #{type}"
+      ## guessing makes Authentication failure tests fail -> no exception thrown
+      if type.to_s == 'auto'    # no autodetection possible => resort to guessing
+        othertypes = {}
+        DOMAIN_RES.each {|k,v| othertypes[k] = TYPES[k] if v.empty? }  # collect providers with no regexp
+        debug "guessing: trying #{othertypes.inspect}"
+        if c = self.guess(login, password, {}, othertypes)
+          return c
+        else
+          raise AuthenticationError
+        end
+      end
+    elsif TYPES.include?(type.to_s.intern)
       TYPES[type.to_s.intern].new(login, password, options)
     else
       raise TypeNotFound, "#{type.inspect} is not a valid type, please choose one of the following: #{TYPES.keys.inspect}"
     end
   end
   
-  def self.guess(login, password, options={})
-    TYPES.inject([]) do |a, t|
+  def self.guess(login, password, options={}, types=TYPES)
+    types.inject([]) do |a, t|
       begin
         a + t[1].new(login, password, options).contacts
       rescue AuthenticationError

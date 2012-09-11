@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Contacts
   class TmobileDe < Base
     URL = "https://email.t-online.de/V4-0-4-0/srv-bin/aaa?method=deliverLoginBox"

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Contacts
   class Hotmail < Base
     DETECTED_DOMAINS = [ /hotmail/i, /live/i, /msn/i, /chaishop/i ]

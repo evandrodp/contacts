@@ -9,6 +9,13 @@ class MailruContactImporterTest < ContactImporterTestCase
     @account = TestAccounts[:mailru]
   end
 
+  def test_guess_importer
+    assert_equal Contacts::Mailru, Contacts.guess_importer('test@mail.ru')
+    assert_equal Contacts::Mailru, Contacts.guess_importer('test@list.ru')
+    assert_equal Contacts::Mailru, Contacts.guess_importer('test@inbox.ru')
+    assert_equal Contacts::Mailru, Contacts.guess_importer('test@bk.ru')
+  end
+
   def test_successful_login
     Contacts.new(:mailru, @account.username, @account.password)
   end

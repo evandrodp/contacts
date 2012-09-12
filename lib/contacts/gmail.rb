@@ -4,6 +4,7 @@ require 'gdata'
 class Contacts
   class Gmail < Base
     
+    DETECTED_DOMAINS = [ /gmail.com/i, /googlemail.com/i ]
     CONTACTS_SCOPE = 'http://www.google.com/m8/feeds/'
     CONTACTS_FEED = CONTACTS_SCOPE + 'contacts/default/full/?max-results=1000'
     
@@ -19,9 +20,18 @@ class Contacts
       
       @contacts = feed.elements.to_a('entry').collect do |entry|
         title, email = entry.elements['title'].text, nil
+        primary_email = nil
+
         entry.elements.each('gd:email') do |e|
-          email = e.attribute('address').value # if e.attribute('primary')
+          if e.attribute('primary')
+            primary_email = e.attribute('address').value 
+          else
+            email = e.attribute('address').value 
+          end
         end
+
+        email = primary_email unless primary_email.nil?
+
         [title, email] unless email.nil?
       end
       @contacts.compact!

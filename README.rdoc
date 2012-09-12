@@ -10,6 +10,7 @@ Contacts is a universal interface to grab contact list information from various 
 * Updated Yahoo adapter
 * Automatic detection of provider using email / login if the login matches an adapters-specific regex
 * More verbose tests (set DEBUG=1) for debugging
+* Merge with some features of liangzan-contacts.
 
 For automatic detection based on email or login regex, use
 
@@ -24,6 +25,16 @@ For all other providers, Contacts.guess(...) will be called, which simply tries 
 * gem install git://github.com/jensb/contacts.git
 * http://github.com/jensb/contacts
 * git clone git://github.com/jensb/contacts.git
+
+Contacts is a universal interface to grab contact list information from various providers including Hotmail, AOL, Gmail, Plaxo, Yahoo, GMX.net, Web.de, inbox.it, sezname.cz.
+
+== Installation
+
+ $ gem install https://github.com/jensb/contacts.git
+
+or on the *Gemfile*
+
+ gem 'contacts', :git => 'https://github.com/jensb/contacts.git'
 
 == Background
 
@@ -47,7 +58,10 @@ Notice there are three ways to use this library so that you can limit the use as
 
 If there are too many failed attempts with the gmail login info, Google will raise a captcha response. To integrate the captcha handling, pass in the token and response via:
 
-  Contacts::Gmail.new(login, password, :captcha_token => params[:captcha_token], :captcha_response => params[:captcha_response]).contacts
+ Contacts::Gmail.new(login,
+                     password,
+                     :captcha_token => params[:captcha_token],
+                     :captcha_response => params[:captcha_response]).contacts
 
 == Examples
 
@@ -69,6 +83,7 @@ See the examples/ directory.
 * Leonardo Wong (mailto:mac@boy.name)
 * Rusty Burchfield
 * justintv
+* Wong Liang Zan (mailto:zan@liangzan.net) - http://liangzan.net
+* Laurynas Butkus
 
 This library is released under the terms of the BSD.
-

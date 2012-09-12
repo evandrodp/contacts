@@ -1,4 +1,8 @@
 # -*- encoding : utf-8 -*-
+require 'csv'
+require 'rubygems'
+require 'nokogiri'
+
 class Contacts
   class Hotmail < Base
     DETECTED_DOMAINS = [ /hotmail/i, /live/i, /msn/i, /chaishop/i ]
@@ -8,6 +12,7 @@ class Contacts
     PWDPAD = "IfYouAreReadingThisYouHaveTooMuchFreeTime"
 
     def real_connect
+
       data, resp, cookies, forward = get(URL)
       old_url = URL
       until forward.nil?
@@ -56,12 +61,15 @@ class Contacts
     def contacts(options = {})
       if @contacts.nil? && connected?
         url = URI.parse(contact_list_url)
-        data, resp, cookies, forward = get(get_contact_list_url, @cookies )
-        data = CSV.parse(data.split("\r\n").join("\r\n").gsub('"', ''), ';')
-        col_names = data.shift  # extract header
-        @contacts = data.collect do |row|
-          debug row.inspect
-          ["#{row[1]} #{row[3]}", row[46] || ""]
+        contact_list_url = get_contact_list_url
+        data, resp, cookies, forward = get(contact_list_url, @cookies )
+
+        data.force_encoding('ISO-8859-1')
+        @contacts = CSV.parse(data, {:headers => true, :col_sep => data[7]}).map do |row|
+          name = ""
+          name = row["First Name"] if !row["First Name"].nil?
+          name << " #{row["Last Name"]}" if !row["Last Name"].nil?
+          [name, row["E-mail Address"] || ""]
         end
       else
         @contacts || []
@@ -72,17 +80,13 @@ class Contacts
 
     TYPES[:hotmail] = Hotmail
     NAMES[:hotmail] = "Hotmail"
-    DOMAIN_RES[:hotmail] = [/[.@]live\./i, /[.@]hotmail\./i]
 
     # the contacts url is dynamic
     # luckily it tells us where to find it
-    def get_contact_list_url
-      data = get(CONTACT_LIST_URL, @cookies)[0]
-      html_doc = Hpricot(data)
-      (html_doc/:a).first.attributes["href"]
-      #html_doc = Nokogiri::HTML(data)
-      #html_doc.xpath("//a")[0]["href"]
+    def get_contact_list_url(url=CONTACT_LIST_URL)
+      data = get(url, @cookies)[0]
+      html_doc = Nokogiri::HTML(data)
+      html_doc.xpath("//a")[0]["href"]
     end
   end
 end
-

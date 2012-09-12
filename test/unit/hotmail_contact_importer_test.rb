@@ -1,12 +1,17 @@
 # -*- encoding : utf-8 -*-
-dir = File.dirname(__FILE__)
-require "#{dir}/../test_helper"
+require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 require 'contacts'
 
 class HotmailContactImporterTest < ContactImporterTestCase
   def setup
     super
     @account = TestAccounts[:hotmail]
+  end
+
+  def test_guess_importer
+    assert_equal Contacts::Hotmail, Contacts.guess_importer('test@hotmail.com')
+    assert_equal Contacts::Hotmail, Contacts.guess_importer('test@hotmail.de')
+    assert_equal Contacts::Hotmail, Contacts.guess_importer('test@live.de')
   end
 
   def test_successful_login
@@ -31,7 +36,7 @@ class HotmailContactImporterTest < ContactImporterTestCase
       Contacts.new(:hotmail, "test@msn.com","wrong_password")
     end
   end
-  
+
   # Since the hotmail scraper doesn't read names, test email
   def test_fetch_email
     contacts = Contacts.new(:hotmail, @account.username, @account.password).contacts

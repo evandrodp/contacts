@@ -9,6 +9,13 @@ class YahooContactImporterTest < ContactImporterTestCase
     @account = TestAccounts[:yahoo]
   end
 
+  def test_guess_importer
+    assert_equal Contacts::Yahoo, Contacts.guess_importer('test@yahoo.com')
+    assert_equal Contacts::Yahoo, Contacts.guess_importer('test@yahoo.de')
+    assert_equal Contacts::Yahoo, Contacts.guess_importer('test@ymail.com')
+    assert_equal Contacts::Yahoo, Contacts.guess_importer('test@rocketmail.com')
+  end
+
   def test_a_successful_login
     Contacts.new(:yahoo, @account.username, @account.password)
   end

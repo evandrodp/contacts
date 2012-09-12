@@ -58,7 +58,6 @@ class Contacts
   
   TYPES[:plaxo] = Plaxo
   NAMES[:plaxo] = "Plaxo.com"
-  DOMAIN_RES[:plaxo] = [/[.@]plaxo\.com$/i]
 
 end # Contacts
 

@@ -9,6 +9,10 @@ class AolContactImporterTest < ContactImporterTestCase
     @account = TestAccounts[:aol]
   end
 
+  def test_guess_importer
+    assert_equal Contacts::Aol, Contacts.guess_importer('test@aol.com')
+  end
+
   def test_successful_login
     Contacts.new(:aol, @account.username, @account.password)
   end

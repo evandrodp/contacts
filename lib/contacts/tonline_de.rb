@@ -1,27 +1,27 @@
-# -*- encoding : utf-8 -*-
 class Contacts
-  class TmobileDe < Base
-    URL = "https://email.t-online.de/V4-0-4-0/srv-bin/aaa?method=deliverLoginBox"
-    ADDRESS_BOOK_URL = "https://email.t-online.de/V4-0-4-0/srv-bin/addressbook?method=exportAdressbook&p%5Bformat%5D=CSV&p%5Bliid%5D="
-    PROTOCOL_ERROR = "t-mobile.de has changed its protocols"
+  class TonlineDe < Base
+    DETECTED_DOMAINS = [ /t-mobile\.de/i, /t-online\.de/i ]
+    URL = "https://email.t-online.de/V4-0-7-0/srv-bin/aaa?method=deliverLoginBox"
+    ADDRESS_BOOK_URL = "https://email.t-online.de/V4-0-7-0/srv-bin/addressbook?method=exportAdressbook&p%5Bformat%5D=CSV&p%5Bliid%5D="
+    PROTOCOL_ERROR = "t-online.de has changed its protocols"
 
     attr_accessor :cookies, :tid
 
     def real_connect
       data, resp, self.cookies, forward = get(URL, "")
-      debug data
-      doc = Hpricot(data)
+
+      doc = Nokogiri(data)
       meta = doc.at('meta[http-equiv=refresh]')
 
       if meta.nil?
-        raise AuthenticationError, PROTOCOL_ERROR
+        raise ConnectionError, PROTOCOL_ERROR
       end
 
       forward = meta['content'].split('URL=').last
       
       data, resp, self.cookies, forward = get(forward, self.cookies)
 
-      doc = Hpricot(data)
+      doc = Nokogiri(data)
 
       self.tid = doc.at('input[name=tid]')['value']
       url = doc.at('form[name=login]')['action']
@@ -75,6 +75,6 @@ class Contacts
     end
   end
 
-  TYPES[:tmobile_de] = TmobileDe
-  NAMES[:tmobile_de] = "T-Mobile"
+  TYPES[:tonline_de] = TonlineDe
+  NAMES[:tonline_de] = "t-online.de"
 end

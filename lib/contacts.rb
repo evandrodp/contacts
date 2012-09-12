@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 $:.unshift(File.dirname(__FILE__)+"/contacts/")
 
 require 'rubygems'
@@ -12,5 +11,8 @@ require 'plaxo'
 require 'aol'
 require 'mailru'
 require 'gmx'
-require 'webde'
-require 'tmobile_de'
+require 'web_de'
+require 'seznam'
+require 'onelt'
+require 'inbox_lt'
+require 'tonline_de'

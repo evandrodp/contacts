@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 dir = File.dirname(__FILE__)
 require "#{dir}/../test_helper"
 require 'contacts'
@@ -18,31 +19,33 @@ class SeznamContactImporterTest < ContactImporterTestCase
   end
 
   def test_successful_login
-    Contacts.new(:seznam, @account.username, @account.password)
+    Contacts.new(:seznam, @account.username, @account.password)  if @account
   end
 
   def test_importer_fails_with_invalid_password
     assert_raise(Contacts::AuthenticationError) do
       Contacts.new(:seznam, @account.username, "wrong_password")
-    end
+    end if @account
   end
 
   def test_importer_fails_with_blank_password
     assert_raise(Contacts::AuthenticationError) do
       Contacts.new(:seznam, @account.username, "")
-    end
+    end if @account
   end
 
   def test_importer_fails_with_blank_username
     assert_raise(Contacts::AuthenticationError) do
       Contacts.new(:seznam, "", @account.password)
-    end
+    end if @account
   end
 
   def test_fetch_contacts
-    contacts = Contacts.new(:seznam, @account.username, @account.password).contacts
-    @account.contacts.each do |contact|
-      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    if @account
+      contacts = Contacts.new(:seznam, @account.username, @account.password).contacts if @account
+      @account.contacts.each do |contact|
+        assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+      end
     end
   end
 end

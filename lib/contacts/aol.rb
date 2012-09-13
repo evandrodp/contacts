@@ -8,10 +8,10 @@ class Contacts
     LOGIN_URL           = "https://my.screenname.aol.com/_cqr/login/login.psp"
     LOGIN_REFERER_URL   = "http://webmail.aol.com/"
     LOGIN_REFERER_PATH = "sitedomain=sns.webmail.aol.com&lang=en&locale=us&authLev=0&uitype=mini&loginId=&redirType=js&xchk=false"
-    AOL_NUM = "35752-111" # this seems to change each time they change the protocol
+    AOL_NUM = "36478-111" # this seems to change each time they change the protocol
     
-    CONTACT_LIST_URL    = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ContactList.aspx"
-    CONTACT_LIST_CSV_URL = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ABExport.aspx?command=all"    
+    CONTACT_LIST_URL    = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ContactList.aspx?folder=Inbox&showUserFolders=False"
+    CONTACT_LIST_CSV_URL = "http://mail.aol.com/#{AOL_NUM}/aol-6/en-us/Lite/ABExport.aspx?command=all"
     PROTOCOL_ERROR      = "AOL has changed its protocols, please upgrade this library first. If that does not work, dive into the code and submit a patch at http://github.com/cardmagic/contacts"
 
     def real_connect
@@ -122,11 +122,12 @@ class Contacts
  
         # parse data and grab <input name="user" value="8QzMPIAKs2" type="hidden">
         doc = Nokogiri(data)
+        debug doc
         (doc/'input[name=user]').each do |input|
           user = input["value"]
         end
 
-        raise ConnectionError, "User ID invalid" if postdata["user"].nil?
+        #raise ConnectionError, "User ID invalid" if postdata["user"].nil?
 
         debug "Got user=#{postdata["user"]}, cookies=#{cookies}"
 
@@ -163,5 +164,4 @@ class Contacts
  
   TYPES[:aol] = Aol
   NAMES[:aol] = "AOL"
-  DOMAIN_RES[:aol] = []  # empty: Domain not included in email, resort to guessing for this provider
 end

@@ -10,6 +10,7 @@ require "erb"
 
 class Contacts
   TYPES = {}
+  NAMES = {}
 
   class Base
     DETECTED_DOMAINS = []
@@ -223,20 +224,6 @@ class Contacts
   end
 
   def self.new(type, login, password, options={})
-    if type.to_s == 'auto' and !DOMAIN_RES.empty?
-      DOMAIN_RES.each { | t, res | res.each { |re| type = t if login.match(re) } }
-      debug "autodetection: found type = #{type}"
-      if type.to_s == 'auto'    # no autodetection possible => resort to guessing
-        othertypes = {}
-        DOMAIN_RES.each {|k,v| othertypes[k] = TYPES[k] if v.empty? }  # collect providers with no regexp
-        debug "guessing: trying #{othertypes.inspect}"
-        if c = self.guess_new(login, password, {}, othertypes)
-          return c
-        else
-          raise AuthenticationError
-        end
-      end
-    end
     if TYPES.include?(type.to_s.intern)
       TYPES[type.to_s.intern].new(login, password, options)
     else

@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class Contacts
   class WebDe < Base
     DETECTED_DOMAINS = [ /web\.de/i ]

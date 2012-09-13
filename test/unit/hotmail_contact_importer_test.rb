@@ -45,3 +45,4 @@ class HotmailContactImporterTest < ContactImporterTestCase
     end
   end
 end
+

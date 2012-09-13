@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Contacts
   class TonlineDe < Base
     DETECTED_DOMAINS = [ /t-mobile\.de/i, /t-online\.de/i ]

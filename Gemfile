@@ -1,6 +1,6 @@
 source :rubygems
 
-gemspec
+gemspec :name => 'contacts'
 
 group :development do
   gem "rake"

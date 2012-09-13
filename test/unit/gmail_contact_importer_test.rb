@@ -16,7 +16,6 @@ class GmailContactImporterTest < ContactImporterTestCase
 
   def test_guess
     contacts = Contacts.guess(@account.username, @account.password)
-
     @account.contacts.each do |contact|
       assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
     end
@@ -24,10 +23,6 @@ class GmailContactImporterTest < ContactImporterTestCase
 
   def test_successful_login
     Contacts.new(:gmail, @account.username, @account.password)
-  end
-
-  def test_autodetection_success
-    Contacts.new(:auto, @account.username, @account.password)
   end
 
   def test_importer_fails_with_invalid_password

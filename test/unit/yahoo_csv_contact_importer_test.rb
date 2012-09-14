@@ -16,6 +16,14 @@ class YahooContactImporterTest < ContactImporterTestCase
     assert_equal Contacts::Yahoo, Contacts.guess_importer('test@rocketmail.com')
   end
 
+  def test_guess
+    return unless @account
+    contacts = Contacts.guess(@account.username, @account.password)
+    @account.contacts.each do |contact|
+      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    end
+  end
+
   def test_a_successful_login
     Contacts.new(:yahoo, @account.username, @account.password)
   end

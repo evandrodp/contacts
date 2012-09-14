@@ -13,6 +13,14 @@ class InboxLtContactImporterTest < ContactImporterTestCase
     assert_equal Contacts::InboxLt, Contacts.guess_importer('test@inbox.lt')
   end
 
+  def test_guess
+    return unless @account
+    contacts = Contacts.guess(@account.username, @account.password)
+    @account.contacts.each do |contact|
+      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    end
+  end
+
   def test_successful_login
     Contacts.new(:inbox_lt, @account.username, @account.password)  if @account
   end

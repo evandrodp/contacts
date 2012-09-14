@@ -16,6 +16,14 @@ class GmxContactImporterTest < ContactImporterTestCase
     assert_equal Contacts::Gmx, Contacts.guess_importer('test@gmx.ch')
   end
 
+  def test_guess
+    return unless @account
+    contacts = Contacts.guess(@account.username, @account.password)
+    @account.contacts.each do |contact|
+      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    end
+  end
+
   def test_successful_login
     Contacts.new(:gmx, @account.username, @account.password)
   end

@@ -15,6 +15,7 @@ class GmailContactImporterTest < ContactImporterTestCase
   end
 
   def test_guess
+    return unless @account
     contacts = Contacts.guess(@account.username, @account.password)
     @account.contacts.each do |contact|
       assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"

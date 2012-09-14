@@ -18,6 +18,14 @@ class SeznamContactImporterTest < ContactImporterTestCase
     assert_equal Contacts::Seznam, Contacts.guess_importer('test@firmy.cz')
   end
 
+  def test_guess
+    return unless @account
+    contacts = Contacts.guess(@account.username, @account.password)
+    @account.contacts.each do |contact|
+      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    end
+  end
+
   def test_successful_login
     Contacts.new(:seznam, @account.username, @account.password)  if @account
   end

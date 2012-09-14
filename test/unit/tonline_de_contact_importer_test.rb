@@ -14,6 +14,14 @@ class TonlineDeContactImporterTest < ContactImporterTestCase
     assert_equal Contacts::TonlineDe, Contacts.guess_importer('test@t-mobile.de')
   end
 
+  def test_guess
+    return unless @account
+    contacts = Contacts.guess(@account.username, @account.password)
+    @account.contacts.each do |contact|
+      assert contacts.include?(contact), "Could not find: #{contact.inspect} in #{contacts.inspect}"
+    end
+  end
+
   def test_successful_login
     Contacts.new(:tonline_de, @account.username, @account.password)
   end

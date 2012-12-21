@@ -63,19 +63,13 @@ class Contacts
         url = URI.parse(contact_list_url)
         contact_list_url = get_contact_list_url
         data, resp, cookies, forward = get(contact_list_url, @cookies )
-<<<<<<< HEAD
-
-        data.force_encoding('ISO-8859-1')
-        @contacts = CSV.parse(data, {:headers => true, :col_sep => data[7]}).map do |row|
-=======
         data.force_encoding('UTF-8')
         separator = data[7]
         unless data.valid_encoding?
           data = data.slice(2..-1).split("\u0000").join('')
-          separator = ','
+          separator = ';'
         end
         @contacts = CSV.parse(data, {:headers => true, :col_sep => separator}).map do |row|
->>>>>>> a6375d4... Fixing error Invalid UTF-8 characters with Hotmail
           name = ""
           name = row["First Name"] if !row["First Name"].nil?
           name << " #{row["Last Name"]}" if !row["Last Name"].nil?

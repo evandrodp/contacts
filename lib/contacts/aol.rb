@@ -3,7 +3,7 @@ class Contacts
   require 'hpricot' if RUBY_VERSION < '1.9'
   require 'csv'
   class Aol < Base
-    DETECTED_DOMAINS    = [ /aol.com/i ]
+    DETECTED_DOMAINS    = [ /aol.com/i, /aol.de/i ]
     URL                 = "http://www.aol.com/"
     LOGIN_URL           = "https://my.screenname.aol.com/_cqr/login/login.psp"
     LOGIN_REFERER_URL   = "http://webmail.aol.com/"

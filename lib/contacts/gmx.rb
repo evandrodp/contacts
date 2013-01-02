@@ -44,7 +44,7 @@ class Contacts
       @contacts = []
 
       CSV.parse(data) do |row|
-        @contacts << ["#{row[2]} #{row[0]}", row[9]] unless header_row?(row)
+        @contacts << ["#{recode(row[2])} #{recode(row[0])}", recode(row[9])] unless header_row?(row)
       end
 
       @contacts
@@ -55,6 +55,10 @@ class Contacts
     end
 
     private
+
+    def recode(str)
+      str.force_encoding("ISO8859-1").encode("UTF-8")
+    end
 
     def header_row?(row)
       row[0] == 'Last Name'

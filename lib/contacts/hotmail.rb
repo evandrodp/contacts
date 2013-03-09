@@ -63,6 +63,9 @@ class Contacts
         url = URI.parse(contact_list_url)
         contact_list_url = get_contact_list_url
         data, resp, cookies, forward = get(contact_list_url, @cookies )
+        until forward.nil?
+          data, resp, cookies, forward, old_url = get(forward, @cookies ) + [forward]
+	end
         data.force_encoding('UTF-8')
         separator = data[7]
         unless data.valid_encoding?

@@ -157,7 +157,7 @@ class Contacts
       forward = resp.response['Location']
       forward ||= (data =~ /<meta.*?url='([^']+)'/ ? CGI.unescapeHTML($1) : nil)
       if forward and URI.parse(forward).host.nil?
-        forward = url.scheme.to_s + "://" + url.host.to_s + forward
+        forward = create_forward_url(url, forward)
       end
       return data, resp, cookies, forward
     end
@@ -176,11 +176,20 @@ class Contacts
       cookies = parse_cookies(resp.response['set-cookie'], cookies)
       forward = resp.response['Location']
       if forward and URI.parse(URI.escape(forward)).host.nil?
-        forward = url.scheme.to_s + "://" + url.host.to_s + forward
+        forward = create_forward_url(url, forward)
       end
       #debug "... received #{resp.inspect}, Location=#{forward}"
       forward.gsub!(' ', '%20') unless forward.nil?
       return data, resp, cookies, forward
+    end
+
+    # create absolute or relative forward URL. Necessary for GMX.
+    def create_forward_url(url, forward)
+      if forward =~ /^\//  # absolute forward without path
+        url.scheme.to_s + "://" + url.host.to_s + forward
+      else  # relative forward -> cut off url after last "/" and append
+        url.scheme.to_s + "://" + url.host.to_s + url.path.to_s.gsub(/\/[^\/]+$/, '/') + forward
+      end
     end
 
     def uncompress(resp)

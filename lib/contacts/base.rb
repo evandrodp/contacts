@@ -141,7 +141,7 @@ class Contacts
     end
 
     def post(url, postdata, cookies="", referer="")
-      debug "posting url='#{url}' postdata='#{postdata}'"
+      debug "posting url='#{url}', postdata='#{postdata}', referer=#{referer}"
       url = URI.parse(url)
       http = open_http(url)
       http_header = { "User-Agent" => self.user_agent,
@@ -163,7 +163,7 @@ class Contacts
     end
 
     def get(url, cookies="", referer="")
-      debug "getting url='#{url}'"
+      debug "getting url='#{url}', referer=#{referer}"
       url = URI.parse(URI.escape(url))
       http = open_http(url)
       resp, data = http.get("#{url.path}?#{url.query}",

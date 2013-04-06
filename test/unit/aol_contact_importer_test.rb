@@ -11,6 +11,7 @@ class AolContactImporterTest < ContactImporterTestCase
 
   def test_guess_importer
     assert_equal Contacts::Aol, Contacts.guess_importer('test@aol.com')
+    assert_equal Contacts::Aol, Contacts.guess_importer('test@aol.de')
   end
 
   def test_guess

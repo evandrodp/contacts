@@ -159,11 +159,12 @@ class Contacts
       if forward and URI.parse(forward).host.nil?
         forward = create_forward_url(url, forward)
       end
+      #debug "... received #{cookies}, Location=#{forward}"
       return data, resp, cookies, forward
     end
 
     def get(url, cookies="", referer="")
-      debug "getting url='#{url}', referer=#{referer}"
+      debug "getting url='#{url}', referer=#{referer}" #", cookies=#{cookies}"
       url = URI.parse(URI.escape(url))
       http = open_http(url)
       resp, data = http.get("#{url.path}?#{url.query}",
@@ -178,8 +179,8 @@ class Contacts
       if forward and URI.parse(URI.escape(forward)).host.nil?
         forward = create_forward_url(url, forward)
       end
-      #debug "... received #{resp.inspect}, Location=#{forward}"
       forward.gsub!(' ', '%20') unless forward.nil?
+      #debug "... received #{cookies}, Location=#{forward}"
       return data, resp, cookies, forward
     end
 

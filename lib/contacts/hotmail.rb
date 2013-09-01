@@ -6,28 +6,25 @@ require 'nokogiri'
 class Contacts
   class Hotmail < Base
     DETECTED_DOMAINS = [ /hotmail/i, /live/i, /msn/i, /chaishop/i ]
-    URL = "https://login.live.com/login.srf?id=2"
+    URL = "https://login.live.com/login.srf"
     CONTACT_LIST_URL = "https://mail.live.com/mail/GetContacts.aspx"
     PROTOCOL_ERROR = "Hotmail has changed its protocols, please upgrade this library first. If that does not work, report this error at http://rubyforge.org/forum/?group_id=2693"
     PWDPAD = "IfYouAreReadingThisYouHaveTooMuchFreeTime"
 
     def real_connect
 
+      # follow no forwards - they just go to jsDisabled, cookiesDisabled, etc. error pages
       data, resp, cookies, forward = get(URL)
-      old_url = URL
-      until forward.nil?
-        data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
-      end
 
       postdata =  "PPSX=%s&PwdPad=%s&login=%s&passwd=%s&LoginOptions=2&PPFT=%s" % [
-        CGI.escape(data.split("><").grep(/PPSX/).first[/=\S+$/][2..-3]),
+        "Passpor",    # don't ask me - seems to work
         PWDPAD[0...(PWDPAD.length-@password.length)],
         CGI.escape(login),
         CGI.escape(password),
-        CGI.escape(data.split("><").grep(/PPFT/).first[/=\S+$/][2..-3])
+        CGI.escape(data.match(/input type="hidden" name="PPFT" id=\S+ value="([^\"]+)"/)[1])
       ]
 
-      form_url = data.split("><").grep(/form/).first.split[5][8..-2]
+      form_url = data.match(/urlPost:'([^']+)'/)[1]
       data, resp, cookies, forward = post(form_url, postdata, cookies)
 
       old_url = form_url

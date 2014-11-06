@@ -63,8 +63,9 @@ class Contacts
         until forward.nil?
           data, resp, cookies, forward, old_url = get(forward, @cookies ) + [forward]
         end
-        data.force_encoding('CP1252') # https://github.com/liangzan/contacts/issues/29
-        data.encode!('UTF-8')
+        data.encode!('UTF-16', invalid: :replace, replace: '')
+        data.encode!('UTF-8', 'UTF-16')
+        
         separator = data[7]
         unless data.valid_encoding?
           data = data.slice(2..-1).split("\u0000").join('')
